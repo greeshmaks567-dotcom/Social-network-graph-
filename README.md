@@ -63,3 +63,125 @@ Compile the C program using:
 
 ```bash
 gcc graph.c -o graph
+
+
+CODE
+#include <stdio.h>
+
+#define V 6
+
+char vertex[V] = {'A','B','C','D','E','F'};
+
+int graph[V][V] = {
+    {0,1,1,0,0,0},
+    {1,0,0,1,1,0},
+    {1,0,0,0,0,1},
+    {0,1,0,0,0,0},
+    {0,1,0,0,0,1},
+    {0,0,1,0,1,0}
+};
+
+void bfs(int start)
+{
+    int visited[V] = {0};
+    int queue[V];
+    int front = 0, rear = 0;
+    int i, u;
+
+    visited[start] = 1;
+    queue[rear++] = start;
+
+    printf("BFS: ");
+
+    while(front < rear)
+    {
+        u = queue[front++];
+        printf("%c ", vertex[u]);
+
+        for(i = 0; i < V; i++)
+        {
+            if(graph[u][i] && !visited[i])
+            {
+                visited[i] = 1;
+                queue[rear++] = i;
+            }
+        }
+    }
+
+    printf("\n");
+}
+
+void dfs(int u, int visited[])
+{
+    int i;
+
+    visited[u] = 1;
+    printf("%c ", vertex[u]);
+
+    for(i = 0; i < V; i++)
+    {
+        if(graph[u][i] && !visited[i])
+            dfs(i, visited);
+    }
+}
+
+void searchVertex(char key)
+{
+    int i, operations = 0;
+
+    for(i = 0; i < V; i++)
+    {
+        operations++;
+
+        if(vertex[i] == key)
+        {
+            printf("Vertex %c found\n", key);
+            printf("Operations: %d\n", operations);
+            return;
+        }
+    }
+
+    printf("Vertex not found\n");
+}
+
+int main()
+{
+    int i, j;
+    int visited[V] = {0};
+
+    printf("Adjacency Matrix:\n");
+
+    for(i = 0; i < V; i++)
+    {
+        for(j = 0; j < V; j++)
+            printf("%d ", graph[i][j]);
+
+        printf("\n");
+    }
+
+    printf("\nAdjacency List:\n");
+
+    for(i = 0; i < V; i++)
+    {
+        printf("%c -> ", vertex[i]);
+
+        for(j = 0; j < V; j++)
+        {
+            if(graph[i][j])
+                printf("%c ", vertex[j]);
+        }
+
+        printf("\n");
+    }
+
+    printf("\nBFS starting from A:\n");
+    bfs(0);
+
+    printf("\nDFS starting from A:\n");
+    dfs(0, visited);
+
+    printf("\n\nSearch for E:\n");
+    searchVertex('E');
+
+    return 0;
+}
